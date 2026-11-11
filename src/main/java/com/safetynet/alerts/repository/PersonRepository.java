@@ -33,4 +33,8 @@ public class PersonRepository {
     public List<Person> getPersons() {
         return safetyNetData.getPersons();
     }
+    public Person addPerson(Person person) {
+        safetyNetData.getPersons().add(person);
+        return person;
+    }
 }
