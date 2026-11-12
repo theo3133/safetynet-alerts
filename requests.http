@@ -1,0 +1,12 @@
+POST http://localhost:8081/person
+Content-Type: application/json
+
+{
+  "firstName": "Jean",
+  "lastName": "Dupont",
+  "address": "10 rue de Paris",
+  "city": "Paris",
+  "zip": "75000",
+  "phone": "0102030405",
+  "email": "jean.dupont@test.fr"
+}
