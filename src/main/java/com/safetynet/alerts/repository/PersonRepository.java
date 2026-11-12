@@ -37,4 +37,23 @@ public class PersonRepository {
         safetyNetData.getPersons().add(person);
         return person;
     }
+    public Person updatePerson(Person updatedPerson) {
+        for (Person existingPerson : safetyNetData.getPersons()) {
+
+            boolean sameFirstName = existingPerson.getFirstName().equals(updatedPerson.getFirstName());
+
+            boolean sameLastName = existingPerson.getLastName().equals(updatedPerson.getLastName());
+
+            if (sameFirstName && sameLastName) {
+                existingPerson.setAddress(updatedPerson.getAddress());
+                existingPerson.setCity(updatedPerson.getCity());
+                existingPerson.setZip(updatedPerson.getZip());
+                existingPerson.setPhone(updatedPerson.getPhone());
+                existingPerson.setEmail(updatedPerson.getEmail());
+
+                return existingPerson;
+            }
+        }
+        return null;
+    }
 }
