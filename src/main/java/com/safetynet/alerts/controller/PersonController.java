@@ -4,11 +4,7 @@ import com.safetynet.alerts.model.Person;
 import com.safetynet.alerts.service.PersonService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/person")
@@ -33,6 +29,13 @@ public class PersonController {
     public Person updatePerson(@RequestBody Person updatedPerson) {
         logger.info("Requête entrante : PUT /person");
         Person result = personService.updatePerson(updatedPerson);
+        logger.info("Réponse sortante : PUT /person - succès");
+        return result;
+    }
+    @DeleteMapping
+    public boolean deletePerson(@RequestBody Person person) {
+        logger.info("Requête entrante : PUT /person");
+        boolean result = personService.deletePerson(person);
         logger.info("Réponse sortante : PUT /person - succès");
         return result;
     }

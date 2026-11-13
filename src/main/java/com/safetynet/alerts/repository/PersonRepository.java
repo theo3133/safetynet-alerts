@@ -56,4 +56,17 @@ public class PersonRepository {
         }
         return null;
     }
+    public boolean deletePerson(Person person) {
+        for (Person existingPerson : safetyNetData.getPersons()) {
+            boolean sameFirstName = existingPerson.getFirstName().equals(person.getFirstName());
+            boolean sameLastName = existingPerson.getLastName().equals(person.getLastName());
+
+            if (sameFirstName && sameLastName) {
+                safetyNetData.getPersons().remove(existingPerson);
+                return true;
+            }
+        }
+        return false;
+
+    }
 }

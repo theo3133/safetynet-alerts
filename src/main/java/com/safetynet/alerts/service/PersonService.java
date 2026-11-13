@@ -68,4 +68,26 @@ public class PersonService {
         }
         return updatePerson;
     }
+
+    public boolean deletePerson(Person person) {
+        if (person == null) {
+            throw new IllegalArgumentException("Tous les champs doivent être remplis");
+        }
+        if (person.getFirstName() == null
+                || person.getFirstName().isBlank()
+                || person.getLastName() == null
+                || person.getLastName().isBlank()) {
+
+            throw new IllegalArgumentException(
+                    "Le prénom et le nom sont obligatoires"
+            );
+        }
+        boolean resultat = personRepository.deletePerson(person);
+        if (!resultat) {
+            throw new IllegalArgumentException(
+                    "Aucune personne trouvée"
+            );
+        }
+        return true;
+    }
 }
