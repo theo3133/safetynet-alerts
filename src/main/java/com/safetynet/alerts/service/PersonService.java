@@ -14,32 +14,22 @@ public class PersonService {
     }
 
     public Person addPerson(Person person) {
-        if (person == null) {
-            throw new IllegalArgumentException(
-                    "La personne ne peut pas être null"
-            );
-        }
-        if (person.getFirstName() == null
-                || person.getFirstName().isBlank()
-                || person.getLastName() == null
-                || person.getLastName().isBlank()) {
-
-            throw new IllegalArgumentException(
-                    "Le prénom et le nom sont obligatoires"
-            );
-        }
         if (personExists(person)) {
             throw new IllegalArgumentException(
                     "La personne existe déjà"
             );
         }
+
         return personRepository.addPerson(person);
     }
 
     public boolean personExists(Person person) {
         for (Person existingPerson : personRepository.getPersons()) {
-            boolean sameFirstName = existingPerson.getFirstName().equals(person.getFirstName());
-            boolean sameLastName = existingPerson.getLastName().equals(person.getLastName());
+            boolean sameFirstName = existingPerson.getFirstName()
+                    .equals(person.getFirstName());
+            boolean sameLastName = existingPerson.getLastName()
+                    .equals(person.getLastName());
+
             if (sameFirstName && sameLastName) {
                 return true;
             }
@@ -49,45 +39,46 @@ public class PersonService {
     }
 
     public Person updatePerson(Person person) {
-        if (person == null) {
-            throw new IllegalArgumentException("Tous les champs doivent être remplis");
-        }
-        if (person.getFirstName() == null
-                || person.getFirstName().isBlank()
-                || person.getLastName() == null
-                || person.getLastName().isBlank()) {
+        Person updatedPerson = personRepository.updatePerson(person);
 
-            throw new IllegalArgumentException(
-                    "Le prénom et le nom sont obligatoires"
-            );
-        }
-
-        Person updatePerson = personRepository.updatePerson(person);
-        if (updatePerson == null) {
-            throw new IllegalArgumentException("aucune personne trouvé");
-        }
-        return updatePerson;
-    }
-
-    public boolean deletePerson(Person person) {
-        if (person == null) {
-            throw new IllegalArgumentException("Tous les champs doivent être remplis");
-        }
-        if (person.getFirstName() == null
-                || person.getFirstName().isBlank()
-                || person.getLastName() == null
-                || person.getLastName().isBlank()) {
-
-            throw new IllegalArgumentException(
-                    "Le prénom et le nom sont obligatoires"
-            );
-        }
-        boolean resultat = personRepository.deletePerson(person);
-        if (!resultat) {
+        if (updatedPerson == null) {
             throw new IllegalArgumentException(
                     "Aucune personne trouvée"
             );
         }
+
+        return updatedPerson;
+    }
+
+    public boolean deletePerson(Person person) {
+        validateIdentityForDeletion(person);
+
+        boolean deleted = personRepository.deletePerson(person);
+
+        if (!deleted) {
+            throw new IllegalArgumentException(
+                    "Aucune personne trouvée"
+            );
+        }
+
         return true;
+    }
+
+    private void validateIdentityForDeletion(Person person) {
+        if (person == null) {
+            throw new IllegalArgumentException(
+                    "La personne ne peut pas être nulle"
+            );
+        }
+
+        if (person.getFirstName() == null
+                || person.getFirstName().isBlank()
+                || person.getLastName() == null
+                || person.getLastName().isBlank()) {
+
+            throw new IllegalArgumentException(
+                    "Le prénom et le nom sont obligatoires"
+            );
+        }
     }
 }

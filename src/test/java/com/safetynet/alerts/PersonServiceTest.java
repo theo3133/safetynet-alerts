@@ -39,24 +39,6 @@ class PersonServiceTest {
     }
 
     @Test
-    void rejectPersonWithBlankFirstName() {
-        Person person = new Person();
-        person.setFirstName("");
-        person.setLastName("Dupont");
-
-        assertThrows(IllegalArgumentException.class, () -> personService.addPerson(person));
-
-        verify(personRepository, never()).addPerson(person);
-    }
-
-    @Test
-    void rejectNullPerson() {
-        assertThrows(
-                IllegalArgumentException.class, () -> personService.addPerson(null));
-
-        verifyNoInteractions(personRepository);
-    }
-    @Test
     void shouldRejectPersonWithSameFirstAndLastName() {
         Person existingPerson = new Person();
         existingPerson.setFirstName("Antoine");

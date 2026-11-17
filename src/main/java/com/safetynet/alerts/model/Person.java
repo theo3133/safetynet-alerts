@@ -1,13 +1,30 @@
 package com.safetynet.alerts.model;
 
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+
 public class Person {
 
+    @NotBlank(message = "Le prénom est obligatoire")
     private String firstName;
+
+    @NotBlank(message = "Le nom est obligatoire")
     private String lastName;
+
+    @NotBlank(message = "L'adresse est obligatoire")
     private String address;
+
+    @NotBlank(message = "La ville est obligatoire")
     private String city;
+
+    @NotBlank(message = "Le code postal est obligatoire")
     private String zip;
+
+    @NotBlank(message = "Le téléphone est obligatoire")
     private String phone;
+
+    @NotBlank(message = "L'email est obligatoire")
+    @Email(message = "Le format de l'email est invalide")
     private String email;
 
     public Person() {
