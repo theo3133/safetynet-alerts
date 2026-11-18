@@ -1,7 +1,6 @@
 package com.safetynet.alerts.controller;
 
 import com.safetynet.alerts.model.Firestation;
-import com.safetynet.alerts.model.Person;
 import com.safetynet.alerts.service.FirestationService;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
@@ -27,5 +26,19 @@ public class FirestationController {
         Firestation newFirestation = firestationService.addFirestation(firestation);
         logger.info("Réponse sortante : POST /firestation - succès");
         return newFirestation;
+    }
+    @PutMapping
+    public Firestation updateFirestation(@Valid @RequestBody Firestation firestation) {
+        logger.info("Requête entrante : PUT /firestation");
+        Firestation newFirestation = firestationService.updateFirestation(firestation);
+        logger.info("Réponse sortante : PUT /firestation - succès");
+        return newFirestation;
+    }
+    @DeleteMapping
+    public boolean removeFirestation(@RequestBody Firestation firestation) {
+        logger.info("Requête entrante : DELETE /firestation");
+        boolean removed = firestationService.removeFirestation(firestation);
+        logger.info("Réponse sortante : DELETE /firestation - succès");
+        return removed;
     }
 }

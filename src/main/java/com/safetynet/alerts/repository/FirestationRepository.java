@@ -1,7 +1,6 @@
 package com.safetynet.alerts.repository;
 
 import com.safetynet.alerts.model.Firestation;
-import com.safetynet.alerts.model.Person;
 import com.safetynet.alerts.model.SafetyNetData;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Repository;
@@ -38,10 +37,24 @@ public class FirestationRepository {
         return firestation;
     }
 
-    public Firestation updateFirestation(Firestation firestation) {
-        safetyNetData.getFirestations().remove(firestation);
-        return firestation;
+    public Firestation updateFirestation(
+            Firestation updatedFirestation) {
+        for (Firestation existingFirestation : safetyNetData.getFirestations()) {
+
+            if (existingFirestation.getAddress().equals(updatedFirestation.getAddress())) {
+                existingFirestation.setStation(updatedFirestation.getStation());
+                return existingFirestation;
+            }
+        }
+
+        return null;
     }
 
+    public boolean removeAddressFirestation(String address) {
+        return safetyNetData.getFirestations().removeIf(existingFirestation -> existingFirestation.getAddress().equals(address));
+    }
 
+    public boolean removeStationFirestation(String station) {
+        return safetyNetData.getFirestations().removeIf(existingFirestation -> existingFirestation.getStation().equals(station));
+    }
 }

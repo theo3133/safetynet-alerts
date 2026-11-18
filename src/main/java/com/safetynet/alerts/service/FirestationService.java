@@ -14,7 +14,22 @@ public class FirestationService {
     }
 
     public Firestation addFirestation(Firestation firestation) {
-        return firestationRepository.addFirestation(firestation);
+        if(!addressAlreadyMapped(firestation)) {
+            return firestationRepository.addFirestation(firestation);
+        }
+        throw new IllegalArgumentException(
+                "L'adresse existe déjà"
+        );
+    }
+    public Firestation updateFirestation(Firestation firestation) {
+        Firestation result = firestationRepository.updateFirestation(firestation);
+
+        if (result == null) {
+            throw new IllegalArgumentException(
+                    "L'adresse n'existe pas"
+            );
+        }
+        return result;
     }
 
 
@@ -29,5 +44,31 @@ public class FirestationService {
         }
 
         return false;
+    }
+
+    public boolean removeFirestation(Firestation firestation) {
+        if (firestation == null) {
+            throw new IllegalArgumentException("La requête est vide");
+        }
+
+        if (firestation.getAddress() == null && firestation.getStation() == null) {
+            throw new IllegalArgumentException(
+                    "Une adresse ou un numéro de station est obligatoire"
+            );
+        }
+
+        boolean removed;
+
+        if (firestation.getAddress() == null) {
+            removed = firestationRepository.removeStationFirestation(firestation.getStation());
+        } else {
+            removed = firestationRepository.removeAddressFirestation(firestation.getAddress());
+        }
+
+        if (!removed) {
+            throw new IllegalArgumentException("Aucune donnée trouvée");
+        }
+
+        return true;
     }
 }
