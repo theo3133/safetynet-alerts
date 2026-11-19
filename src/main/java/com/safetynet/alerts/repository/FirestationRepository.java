@@ -12,15 +12,14 @@ import java.util.List;
 
 @Repository
 public class FirestationRepository {
-    private final ObjectMapper objectMapper;
+
     private final SafetyNetData safetyNetData;
 
     public FirestationRepository(ObjectMapper objectMapper) {
-        this.objectMapper = objectMapper;
-
-        try (InputStream inputStream = new ClassPathResource("data.json").getInputStream()) {
-            this.safetyNetData = objectMapper.readValue(inputStream, SafetyNetData.class);
-
+        try (InputStream inputStream =
+                     new ClassPathResource("data.json").getInputStream()) {
+            this.safetyNetData =
+                    objectMapper.readValue(inputStream, SafetyNetData.class);
         } catch (IOException exception) {
             throw new IllegalStateException(
                     "Impossible de lire le fichier data.json",
@@ -28,22 +27,29 @@ public class FirestationRepository {
             );
         }
     }
+
     public List<Firestation> getFirestations() {
-        return safetyNetData.getFirestations();
+        return safetyNetData.firestations();
     }
 
     public Firestation addFirestation(Firestation firestation) {
-        safetyNetData.getFirestations().add(firestation);
+        safetyNetData.firestations().add(firestation);
         return firestation;
     }
 
-    public Firestation updateFirestation(
-            Firestation updatedFirestation) {
-        for (Firestation existingFirestation : safetyNetData.getFirestations()) {
+    public Firestation updateFirestation(Firestation updatedFirestation) {
+        for (int index = 0;
+             index < safetyNetData.firestations().size();
+             index++) {
 
-            if (existingFirestation.getAddress().equals(updatedFirestation.getAddress())) {
-                existingFirestation.setStation(updatedFirestation.getStation());
-                return existingFirestation;
+            Firestation existingFirestation =
+                    safetyNetData.firestations().get(index);
+
+            if (existingFirestation.address()
+                    .equals(updatedFirestation.address())) {
+
+                safetyNetData.firestations().set(index, updatedFirestation);
+                return updatedFirestation;
             }
         }
 
@@ -51,10 +57,12 @@ public class FirestationRepository {
     }
 
     public boolean removeAddressFirestation(String address) {
-        return safetyNetData.getFirestations().removeIf(existingFirestation -> existingFirestation.getAddress().equals(address));
+        return safetyNetData.firestations().removeIf(existingFirestation ->
+                existingFirestation.address().equals(address));
     }
 
     public boolean removeStationFirestation(String station) {
-        return safetyNetData.getFirestations().removeIf(existingFirestation -> existingFirestation.getStation().equals(station));
+        return safetyNetData.firestations().removeIf(existingFirestation ->
+                existingFirestation.station().equals(station));
     }
 }

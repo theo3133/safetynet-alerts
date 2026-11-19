@@ -25,9 +25,15 @@ class PersonServiceTest {
 
     @Test
     void addValidPerson() {
-        Person person = new Person();
-        person.setFirstName("Jean");
-        person.setLastName("Dupont");
+        Person person = new Person(
+                "Jean",
+                "Dupont",
+                "10 rue de Paris",
+                "Paris",
+                "75000",
+                "0102030405",
+                "jean.dupont@test.fr"
+        );
 
         when(personRepository.getPersons()).thenReturn(List.of());
         when(personRepository.addPerson(person)).thenReturn(person);
@@ -40,13 +46,25 @@ class PersonServiceTest {
 
     @Test
     void shouldRejectPersonWithSameFirstAndLastName() {
-        Person existingPerson = new Person();
-        existingPerson.setFirstName("Antoine");
-        existingPerson.setLastName("Dupont");
+        Person existingPerson = new Person(
+                "Antoine",
+                "Dupont",
+                "1 rue A",
+                "Paris",
+                "75000",
+                "0102030405",
+                "antoine.dupont@test.fr"
+        );
 
-        Person duplicatePerson = new Person();
-        duplicatePerson.setFirstName("Antoine");
-        duplicatePerson.setLastName("Dupont");
+        Person duplicatePerson = new Person(
+                "Antoine",
+                "Dupont",
+                "2 rue B",
+                "Lyon",
+                "69000",
+                "0605040302",
+                "autre@test.fr"
+        );
 
         when(personRepository.getPersons()).thenReturn(List.of(existingPerson));
 

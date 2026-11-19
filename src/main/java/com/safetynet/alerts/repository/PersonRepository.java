@@ -13,16 +13,13 @@ import java.util.List;
 @Repository
 public class PersonRepository {
 
-    private final ObjectMapper objectMapper;
     private final SafetyNetData safetyNetData;
 
     public PersonRepository(ObjectMapper objectMapper) {
-        this.objectMapper = objectMapper;
-
-        try
-                (InputStream inputStream = new ClassPathResource("data.json").getInputStream()) {
-                this.safetyNetData = objectMapper.readValue(inputStream, SafetyNetData.class);
-
+        try (InputStream inputStream =
+                     new ClassPathResource("data.json").getInputStream()) {
+            this.safetyNetData =
+                    objectMapper.readValue(inputStream, SafetyNetData.class);
         } catch (IOException exception) {
             throw new IllegalStateException(
                     "Impossible de lire le fichier data.json",
@@ -30,43 +27,35 @@ public class PersonRepository {
             );
         }
     }
+
     public List<Person> getPersons() {
-        return safetyNetData.getPersons();
+        return safetyNetData.persons();
     }
+
     public Person addPerson(Person person) {
-        safetyNetData.getPersons().add(person);
+        safetyNetData.persons().add(person);
         return person;
     }
+
     public Person updatePerson(Person updatedPerson) {
-        for (Person existingPerson : safetyNetData.getPersons()) {
+        for (int index = 0; index < safetyNetData.persons().size(); index++) {
+            Person existingPerson = safetyNetData.persons().get(index);
 
-            boolean sameFirstName = existingPerson.getFirstName().equals(updatedPerson.getFirstName());
-
-            boolean sameLastName = existingPerson.getLastName().equals(updatedPerson.getLastName());
+            boolean sameFirstName = existingPerson.firstName().equals(updatedPerson.firstName());
+            boolean sameLastName = existingPerson.lastName().equals(updatedPerson.lastName());
 
             if (sameFirstName && sameLastName) {
-                existingPerson.setAddress(updatedPerson.getAddress());
-                existingPerson.setCity(updatedPerson.getCity());
-                existingPerson.setZip(updatedPerson.getZip());
-                existingPerson.setPhone(updatedPerson.getPhone());
-                existingPerson.setEmail(updatedPerson.getEmail());
-
-                return existingPerson;
+                safetyNetData.persons().set(index, updatedPerson);
+                return updatedPerson;
             }
         }
+
         return null;
     }
+
     public boolean deletePerson(Person person) {
-        for (Person existingPerson : safetyNetData.getPersons()) {
-            boolean sameFirstName = existingPerson.getFirstName().equals(person.getFirstName());
-            boolean sameLastName = existingPerson.getLastName().equals(person.getLastName());
-
-            if (sameFirstName && sameLastName) {
-                safetyNetData.getPersons().remove(existingPerson);
-                return true;
-            }
-        }
-        return false;
-
+        return safetyNetData.persons().removeIf(existingPerson ->
+                existingPerson.firstName().equals(person.firstName())
+                        && existingPerson.lastName().equals(person.lastName()));
     }
 }

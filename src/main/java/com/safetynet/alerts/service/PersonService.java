@@ -15,36 +15,17 @@ public class PersonService {
 
     public Person addPerson(Person person) {
         if (personExists(person)) {
-            throw new IllegalArgumentException(
-                    "La personne existe déjà"
-            );
+            throw new IllegalArgumentException("La personne existe déjà");
         }
 
         return personRepository.addPerson(person);
-    }
-
-    public boolean personExists(Person person) {
-        for (Person existingPerson : personRepository.getPersons()) {
-            boolean sameFirstName = existingPerson.getFirstName()
-                    .equals(person.getFirstName());
-            boolean sameLastName = existingPerson.getLastName()
-                    .equals(person.getLastName());
-
-            if (sameFirstName && sameLastName) {
-                return true;
-            }
-        }
-
-        return false;
     }
 
     public Person updatePerson(Person person) {
         Person updatedPerson = personRepository.updatePerson(person);
 
         if (updatedPerson == null) {
-            throw new IllegalArgumentException(
-                    "Aucune personne trouvée"
-            );
+            throw new IllegalArgumentException("Aucune personne trouvée");
         }
 
         return updatedPerson;
@@ -56,12 +37,25 @@ public class PersonService {
         boolean deleted = personRepository.deletePerson(person);
 
         if (!deleted) {
-            throw new IllegalArgumentException(
-                    "Aucune personne trouvée"
-            );
+            throw new IllegalArgumentException("Aucune personne trouvée");
         }
 
         return true;
+    }
+
+    private boolean personExists(Person person) {
+        for (Person existingPerson : personRepository.getPersons()) {
+            boolean sameFirstName = existingPerson.firstName()
+                    .equals(person.firstName());
+            boolean sameLastName = existingPerson.lastName()
+                    .equals(person.lastName());
+
+            if (sameFirstName && sameLastName) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private void validateIdentityForDeletion(Person person) {
@@ -71,10 +65,10 @@ public class PersonService {
             );
         }
 
-        if (person.getFirstName() == null
-                || person.getFirstName().isBlank()
-                || person.getLastName() == null
-                || person.getLastName().isBlank()) {
+        if (person.firstName() == null
+                || person.firstName().isBlank()
+                || person.lastName() == null
+                || person.lastName().isBlank()) {
 
             throw new IllegalArgumentException(
                     "Le prénom et le nom sont obligatoires"

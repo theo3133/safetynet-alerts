@@ -9,7 +9,8 @@ public class MedicalRecordService {
 
     private final MedicalRecordRepository medicalRecordRepository;
 
-    public MedicalRecordService(MedicalRecordRepository medicalRecordRepository) {
+    public MedicalRecordService(
+            MedicalRecordRepository medicalRecordRepository) {
         this.medicalRecordRepository = medicalRecordRepository;
     }
 
@@ -53,12 +54,12 @@ public class MedicalRecordService {
 
     private boolean medicalRecordExists(MedicalRecord medicalRecord) {
         for (MedicalRecord existingMedicalRecord
-                : medicalRecordRepository.getMedicalRecord()) {
+                : medicalRecordRepository.getMedicalRecords()) {
 
-            boolean sameFirstName = existingMedicalRecord.getFirstName()
-                    .equals(medicalRecord.getFirstName());
-            boolean sameLastName = existingMedicalRecord.getLastName()
-                    .equals(medicalRecord.getLastName());
+            boolean sameFirstName = existingMedicalRecord.firstName()
+                    .equals(medicalRecord.firstName());
+            boolean sameLastName = existingMedicalRecord.lastName()
+                    .equals(medicalRecord.lastName());
 
             if (sameFirstName && sameLastName) {
                 return true;
@@ -75,10 +76,10 @@ public class MedicalRecordService {
             );
         }
 
-        if (medicalRecord.getFirstName() == null
-                || medicalRecord.getFirstName().isBlank()
-                || medicalRecord.getLastName() == null
-                || medicalRecord.getLastName().isBlank()) {
+        if (medicalRecord.firstName() == null
+                || medicalRecord.firstName().isBlank()
+                || medicalRecord.lastName() == null
+                || medicalRecord.lastName().isBlank()) {
 
             throw new IllegalArgumentException(
                     "Le prénom et le nom sont obligatoires"

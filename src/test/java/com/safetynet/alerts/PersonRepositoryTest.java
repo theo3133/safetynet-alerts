@@ -23,16 +23,22 @@ class PersonRepositoryTest {
         assertNotNull(persons);
         assertFalse(persons.isEmpty());
         Person firstPerson = persons.get(0);
-        assertEquals("John", firstPerson.getFirstName());
+        assertEquals("John", firstPerson.firstName());
     }
 
     @Test
     void shouldAddPerson() {
         int initialSize = personRepository.getPersons().size();
 
-        Person newPerson = new Person();
-        newPerson.setFirstName("Test");
-        newPerson.setLastName("Person");
+        Person newPerson = new Person(
+                "Test",
+                "Person",
+                "1 rue du Test",
+                "Paris",
+                "75000",
+                "0102030405",
+                "test.person@test.fr"
+        );
 
         personRepository.addPerson(newPerson);
 

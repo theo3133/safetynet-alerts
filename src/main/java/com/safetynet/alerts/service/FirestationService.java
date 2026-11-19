@@ -14,36 +14,22 @@ public class FirestationService {
     }
 
     public Firestation addFirestation(Firestation firestation) {
-        if(!addressAlreadyMapped(firestation)) {
+        if (!addressAlreadyMapped(firestation)) {
             return firestationRepository.addFirestation(firestation);
         }
-        throw new IllegalArgumentException(
-                "L'adresse existe déjà"
-        );
+
+        throw new IllegalArgumentException("L'adresse existe déjà");
     }
+
     public Firestation updateFirestation(Firestation firestation) {
-        Firestation result = firestationRepository.updateFirestation(firestation);
+        Firestation result =
+                firestationRepository.updateFirestation(firestation);
 
         if (result == null) {
-            throw new IllegalArgumentException(
-                    "L'adresse n'existe pas"
-            );
+            throw new IllegalArgumentException("L'adresse n'existe pas");
         }
+
         return result;
-    }
-
-
-    public boolean addressAlreadyMapped(Firestation firestation) {
-        for (Firestation currentFirestation : firestationRepository.getFirestations()) {
-
-            boolean sameAddress = firestation.getAddress().equals(currentFirestation.getAddress());
-
-            if (sameAddress) {
-                return true;
-            }
-        }
-
-        return false;
     }
 
     public boolean removeFirestation(Firestation firestation) {
@@ -51,7 +37,7 @@ public class FirestationService {
             throw new IllegalArgumentException("La requête est vide");
         }
 
-        if (firestation.getAddress() == null && firestation.getStation() == null) {
+        if (firestation.address() == null && firestation.station() == null) {
             throw new IllegalArgumentException(
                     "Une adresse ou un numéro de station est obligatoire"
             );
@@ -59,10 +45,12 @@ public class FirestationService {
 
         boolean removed;
 
-        if (firestation.getAddress() == null) {
-            removed = firestationRepository.removeStationFirestation(firestation.getStation());
+        if (firestation.address() == null) {
+            removed = firestationRepository
+                    .removeStationFirestation(firestation.station());
         } else {
-            removed = firestationRepository.removeAddressFirestation(firestation.getAddress());
+            removed = firestationRepository
+                    .removeAddressFirestation(firestation.address());
         }
 
         if (!removed) {
@@ -70,5 +58,17 @@ public class FirestationService {
         }
 
         return true;
+    }
+
+    private boolean addressAlreadyMapped(Firestation firestation) {
+        for (Firestation currentFirestation
+                : firestationRepository.getFirestations()) {
+
+            if (firestation.address().equals(currentFirestation.address())) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

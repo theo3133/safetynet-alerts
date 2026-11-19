@@ -1,12 +1,31 @@
-POST http://localhost:8081/person
+POST http://localhost:8081/medicalRecord
 Content-Type: application/json
 
 {
   "firstName": "Jean",
-  "lastName": "Dupont",
-  "address": "10 rue de Paris",
-  "city": "Paris",
-  "zip": "75000",
-  "phone": "0102030405",
-  "email": "jean.dupont@test.fr"
+  "lastName": "Test",
+  "birthdate": "01/01/2000",
+  "medications": [],
+  "allergies": []
+}
+
+###
+PUT http://localhost:8081/medicalRecord
+Content-Type: application/json
+
+{
+  "firstName": "Jean",
+  "lastName": "Test",
+  "birthdate": "01/01/2000",
+  "medications": ["paracetamol:500mg"],
+  "allergies": ["peanut"]
+}
+
+###
+DELETE http://localhost:8081/medicalRecord
+Content-Type: application/json
+
+{
+  "firstName": "Jean",
+  "lastName": "Test"
 }
