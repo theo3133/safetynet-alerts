@@ -29,3 +29,5 @@ Content-Type: application/json
   "firstName": "Jean",
   "lastName": "Test"
 }
+###
+GET http://localhost:8081/firestation?stationNumber=1

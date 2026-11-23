@@ -1,5 +1,7 @@
 package com.safetynet.alerts.service;
 
+import com.safetynet.alerts.exception.DuplicateResourceException;
+import com.safetynet.alerts.exception.ResourceNotFoundException;
 import com.safetynet.alerts.model.MedicalRecord;
 import com.safetynet.alerts.repository.MedicalRecordRepository;
 import org.springframework.stereotype.Service;
@@ -16,7 +18,7 @@ public class MedicalRecordService {
 
     public MedicalRecord addMedicalRecord(MedicalRecord medicalRecord) {
         if (medicalRecordExists(medicalRecord)) {
-            throw new IllegalArgumentException(
+            throw new DuplicateResourceException(
                     "Le dossier médical existe déjà"
             );
         }
@@ -29,7 +31,7 @@ public class MedicalRecordService {
                 medicalRecordRepository.updateMedicalRecord(medicalRecord);
 
         if (updatedMedicalRecord == null) {
-            throw new IllegalArgumentException(
+            throw new ResourceNotFoundException(
                     "Aucun dossier médical trouvé"
             );
         }
@@ -44,7 +46,7 @@ public class MedicalRecordService {
                 medicalRecordRepository.deleteMedicalRecord(medicalRecord);
 
         if (!deleted) {
-            throw new IllegalArgumentException(
+            throw new ResourceNotFoundException(
                     "Aucun dossier médical trouvé"
             );
         }

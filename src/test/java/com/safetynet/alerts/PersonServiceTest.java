@@ -1,4 +1,5 @@
 package com.safetynet.alerts;
+import com.safetynet.alerts.exception.DuplicateResourceException;
 import com.safetynet.alerts.model.Person;
 import com.safetynet.alerts.repository.PersonRepository;
 import com.safetynet.alerts.service.PersonService;
@@ -68,7 +69,10 @@ class PersonServiceTest {
 
         when(personRepository.getPersons()).thenReturn(List.of(existingPerson));
 
-        assertThrows(IllegalArgumentException.class, () -> personService.addPerson(duplicatePerson));
+        assertThrows(
+                DuplicateResourceException.class,
+                () -> personService.addPerson(duplicatePerson)
+        );
 
         verify(personRepository, never()).addPerson(duplicatePerson);
     }

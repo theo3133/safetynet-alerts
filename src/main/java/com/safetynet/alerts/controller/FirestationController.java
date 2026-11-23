@@ -1,5 +1,6 @@
 package com.safetynet.alerts.controller;
 
+import com.safetynet.alerts.dto.PersonCouvertFirestation;
 import com.safetynet.alerts.model.Firestation;
 import com.safetynet.alerts.service.FirestationService;
 import jakarta.validation.Valid;
@@ -40,5 +41,13 @@ public class FirestationController {
         boolean removed = firestationService.removeFirestation(firestation);
         logger.info("Réponse sortante : DELETE /firestation - succès");
         return removed;
+    }
+
+    @GetMapping(params = "stationNumber")
+    public PersonCouvertFirestation getPersonsCoveredByStation(@RequestParam String stationNumber) {
+        logger.info("Requête entrante : GET /firestation?stationNumber={}", stationNumber);
+        PersonCouvertFirestation response = firestationService.personCouvertStationfire(stationNumber);
+        logger.info("Réponse sortante : GET /firestation?stationNumber={} - succès", stationNumber);
+        return response;
     }
 }

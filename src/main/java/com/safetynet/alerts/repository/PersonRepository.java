@@ -8,7 +8,9 @@ import tools.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Repository
 public class PersonRepository {
@@ -57,5 +59,15 @@ public class PersonRepository {
         return safetyNetData.persons().removeIf(existingPerson ->
                 existingPerson.firstName().equals(person.firstName())
                         && existingPerson.lastName().equals(person.lastName()));
+    }
+
+    public List<Person> findPersonsByAddresses(Set<String> adresse) {
+        List<Person> persons = new ArrayList<>();
+        for (Person person : safetyNetData.persons()) {
+            if (adresse.contains(person.address())) {
+                persons.add(person);
+            }
+        }
+        return persons;
     }
 }

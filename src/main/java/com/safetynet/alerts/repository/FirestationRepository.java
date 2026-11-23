@@ -1,6 +1,7 @@
 package com.safetynet.alerts.repository;
 
 import com.safetynet.alerts.model.Firestation;
+import com.safetynet.alerts.model.Person;
 import com.safetynet.alerts.model.SafetyNetData;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Repository;
@@ -8,7 +9,10 @@ import tools.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Repository
 public class FirestationRepository {
@@ -64,5 +68,15 @@ public class FirestationRepository {
     public boolean removeStationFirestation(String station) {
         return safetyNetData.firestations().removeIf(existingFirestation ->
                 existingFirestation.station().equals(station));
+    }
+
+    public Set<String>  findAddressesByStation(String station){
+        Set<String> adresses = new HashSet<>();
+        for (Firestation currentFirestation : safetyNetData.firestations()) {
+            if(currentFirestation.station().equals(station)){
+                adresses.add(currentFirestation.address());
+            }
+        }
+        return adresses;
     }
 }

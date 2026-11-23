@@ -1,16 +1,35 @@
 package com.safetynet.alerts.service;
 
+import com.safetynet.alerts.dto.PersonCouvertFirestation;
+import com.safetynet.alerts.dto.PersonSimplified;
+import com.safetynet.alerts.exception.DuplicateResourceException;
+import com.safetynet.alerts.exception.ResourceNotFoundException;
 import com.safetynet.alerts.model.Firestation;
+import com.safetynet.alerts.model.MedicalRecord;
+import com.safetynet.alerts.model.Person;
 import com.safetynet.alerts.repository.FirestationRepository;
+import com.safetynet.alerts.repository.MedicalRecordRepository;
+import com.safetynet.alerts.repository.PersonRepository;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 @Service
 public class FirestationService {
 
     private final FirestationRepository firestationRepository;
-
-    public FirestationService(FirestationRepository firestationRepository) {
+    private final PersonRepository personRepository;
+    private final MedicalRecordRepository medicalRecordRepository;
+    public FirestationService(
+            FirestationRepository firestationRepository,
+            PersonRepository personRepository,
+            MedicalRecordRepository medicalRecordRepository) {
         this.firestationRepository = firestationRepository;
+        this.personRepository = personRepository;
+        this.medicalRecordRepository = medicalRecordRepository;
     }
 
     public Firestation addFirestation(Firestation firestation) {
@@ -18,7 +37,7 @@ public class FirestationService {
             return firestationRepository.addFirestation(firestation);
         }
 
-        throw new IllegalArgumentException("L'adresse existe déjà");
+        throw new DuplicateResourceException("L'adresse existe déjà");
     }
 
     public Firestation updateFirestation(Firestation firestation) {
@@ -26,7 +45,7 @@ public class FirestationService {
                 firestationRepository.updateFirestation(firestation);
 
         if (result == null) {
-            throw new IllegalArgumentException("L'adresse n'existe pas");
+            throw new ResourceNotFoundException("L'adresse n'existe pas");
         }
 
         return result;
@@ -54,7 +73,7 @@ public class FirestationService {
         }
 
         if (!removed) {
-            throw new IllegalArgumentException("Aucune donnée trouvée");
+            throw new ResourceNotFoundException("Aucune donnée trouvée");
         }
 
         return true;
@@ -70,5 +89,35 @@ public class FirestationService {
         }
 
         return false;
+    }
+
+    public PersonCouvertFirestation personCouvertStationfire(String numeroStation){
+        int countChild = 0;
+        int countAdult = 0;
+
+        Set<String> adresses= firestationRepository.findAddressesByStation(numeroStation);
+        List<Person> persons = personRepository.findPersonsByAddresses(adresses);
+
+        List<PersonSimplified> simplifiedPersons = new ArrayList<>();
+        for (Person person : persons) {
+            PersonSimplified simplifiedPerson = new PersonSimplified(
+                            person.firstName(),
+                            person.lastName(),
+                            person.address(),
+                            person.phone()
+                    );
+
+            simplifiedPersons.add(simplifiedPerson);
+        }
+
+        Map<String, Integer> personBirthdays = medicalRecordRepository.findAgesByPersons(simplifiedPersons);
+        for (int age : personBirthdays.values()) {
+            if (age <= 18) {
+                countChild++;
+            } else {
+                countAdult++;
+            }
+        }
+        return new PersonCouvertFirestation(simplifiedPersons,  countChild, countAdult);
     }
 }

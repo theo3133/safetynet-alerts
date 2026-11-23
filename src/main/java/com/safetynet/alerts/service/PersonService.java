@@ -1,5 +1,7 @@
 package com.safetynet.alerts.service;
 
+import com.safetynet.alerts.exception.DuplicateResourceException;
+import com.safetynet.alerts.exception.ResourceNotFoundException;
 import com.safetynet.alerts.model.Person;
 import com.safetynet.alerts.repository.PersonRepository;
 import org.springframework.stereotype.Service;
@@ -15,7 +17,7 @@ public class PersonService {
 
     public Person addPerson(Person person) {
         if (personExists(person)) {
-            throw new IllegalArgumentException("La personne existe déjà");
+            throw new DuplicateResourceException("La personne existe déjà");
         }
 
         return personRepository.addPerson(person);
@@ -25,7 +27,7 @@ public class PersonService {
         Person updatedPerson = personRepository.updatePerson(person);
 
         if (updatedPerson == null) {
-            throw new IllegalArgumentException("Aucune personne trouvée");
+            throw new ResourceNotFoundException("Aucune personne trouvée");
         }
 
         return updatedPerson;
@@ -37,7 +39,7 @@ public class PersonService {
         boolean deleted = personRepository.deletePerson(person);
 
         if (!deleted) {
-            throw new IllegalArgumentException("Aucune personne trouvée");
+            throw new ResourceNotFoundException("Aucune personne trouvée");
         }
 
         return true;
