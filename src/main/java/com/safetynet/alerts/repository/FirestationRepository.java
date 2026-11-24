@@ -79,4 +79,13 @@ public class FirestationRepository {
         }
         return adresses;
     }
+
+    public String findStationByAddress(String address){
+        for (Firestation currentFirestation : safetyNetData.firestations()) {
+            if(currentFirestation.address().equals(address)) {
+                return currentFirestation.station();
+            }
+        }
+        return null;
+    }
 }

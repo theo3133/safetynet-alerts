@@ -85,4 +85,7 @@ public class PersonRepository {
         }
         return numbers;
     }
+    public Set<String> findNumberByAddresses(String adresse) {
+        return findNumberByAddresses(Set.of(adresse));
+    }
 }

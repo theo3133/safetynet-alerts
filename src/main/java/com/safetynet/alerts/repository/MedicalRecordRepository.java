@@ -12,6 +12,7 @@ import java.io.InputStream;
 import java.time.LocalDate;
 import java.time.Period;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -106,5 +107,29 @@ public class MedicalRecordRepository {
         }
 
         return ages;
+    }
+
+    public List<String> findMedicationsByPerson(Person person) {
+        for (MedicalRecord medicalRecord : safetyNetData.medicalRecords()) {
+
+            boolean sameFirstName = person.firstName().equals(medicalRecord.firstName());
+            boolean sameLastName = person.lastName().equals(medicalRecord.lastName());
+            if (sameFirstName && sameLastName) {
+                return medicalRecord.medications();
+            }
+        }
+        return List.of();
+    }
+
+    public List<String> findAllergieByPerson(Person person) {
+        for (MedicalRecord medicalRecord : safetyNetData.medicalRecords()) {
+
+            boolean sameFirstName = person.firstName().equals(medicalRecord.firstName());
+            boolean sameLastName = person.lastName().equals(medicalRecord.lastName());
+            if (sameFirstName && sameLastName) {
+                return medicalRecord.allergies();
+            }
+        }
+        return List.of();
     }
 }

@@ -40,3 +40,6 @@ GET http://localhost:8081/childAlert?address=644%20Gershwin%20Cir
 
 ###
 GET http://localhost:8081/phoneAlert?firestation=1
+
+###
+GET http://localhost:8081/fire?address=1509%20Culver%20St
