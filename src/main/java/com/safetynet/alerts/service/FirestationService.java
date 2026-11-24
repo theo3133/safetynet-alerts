@@ -110,8 +110,8 @@ public class FirestationService {
             simplifiedPersons.add(simplifiedPerson);
         }
 
-        Map<String, Integer> personBirthdays = medicalRecordRepository.findAgesByPersons(simplifiedPersons);
-        for (int age : personBirthdays.values()) {
+        Map<String, Integer> personAges = medicalRecordRepository.findAgesByPersons(persons);
+        for (int age : personAges.values()) {
             if (age <= 18) {
                 countChild++;
             } else {

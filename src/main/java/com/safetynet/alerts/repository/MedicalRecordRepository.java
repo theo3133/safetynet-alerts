@@ -6,7 +6,7 @@ import com.safetynet.alerts.model.SafetyNetData;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Repository;
 import tools.jackson.databind.ObjectMapper;
-
+import com.safetynet.alerts.model.Person;
 import java.io.IOException;
 import java.io.InputStream;
 import java.time.LocalDate;
@@ -82,21 +82,26 @@ public class MedicalRecordRepository {
         return Period.between(birthDate, LocalDate.now()).getYears();
     }
 
-    public Map<String, Integer> findAgesByPersons(List<PersonSimplified> persons) {
+    public Map<String, Integer> findAgesByPersons(List<Person> persons) {
         Map<String, Integer> ages = new HashMap<>();
 
-        for (PersonSimplified person : persons) {
+        for (Person person : persons) {
             for (MedicalRecord medicalRecord : safetyNetData.medicalRecords()) {
-                boolean sameFirstName = person.firstName().equals(medicalRecord.firstName());
-                boolean sameLastName = person.lastName().equals(medicalRecord.lastName());
+
+                boolean sameFirstName =
+                        person.firstName().equals(medicalRecord.firstName());
+
+                boolean sameLastName =
+                        person.lastName().equals(medicalRecord.lastName());
 
                 if (sameFirstName && sameLastName) {
                     int age = calculateAge(medicalRecord.birthdate());
-                    String identity = person.firstName() + " " + person.lastName();
+                    String identity =
+                            person.firstName() + " " + person.lastName();
+
                     ages.put(identity, age);
                     break;
                 }
-
             }
         }
 

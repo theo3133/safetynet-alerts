@@ -9,6 +9,7 @@ import tools.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -69,5 +70,19 @@ public class PersonRepository {
             }
         }
         return persons;
+    }
+
+    public List<Person> findPersonsByAddresses(String adresse) {
+        return findPersonsByAddresses(Set.of(adresse));
+    }
+
+    public Set<String> findNumberByAddresses(Set<String> adresse) {
+        Set<String> numbers = new HashSet<>();
+        for (Person person : safetyNetData.persons()) {
+            if (adresse.contains(person.address())) {
+                numbers.add(person.phone());
+            }
+        }
+        return numbers;
     }
 }
